@@ -1,0 +1,980 @@
+﻿<Window x:Name="Window1" x:Class="PractikaBD.MainWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PractikaBD"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="800" Width="1338" WindowState="Maximized"
+    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" WindowStartupLocation="Manual">
+    <Window.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" SnapsToDevicePixels="true" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <LinearGradientBrush x:Key="TabItem.Static.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#F0F0F0" Offset="0.0"/>
+            <GradientStop Color="#E5E5E5" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="TabItem.Static.Border" Color="#ACACAC"/>
+        <LinearGradientBrush x:Key="TabItem.MouseOver.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#ECF4FC" Offset="0.0"/>
+            <GradientStop Color="#DCECFC" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="TabItem.MouseOver.Border" Color="#7EB4EA"/>
+        <SolidColorBrush x:Key="TabItem.Selected.Background" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="TabItem.Selected.Border" Color="#ACACAC"/>
+        <SolidColorBrush x:Key="TabItem.Disabled.Background" Color="#F0F0F0"/>
+        <SolidColorBrush x:Key="TabItem.Disabled.Border" Color="#D9D9D9"/>
+        <Style x:Key="TabItemStyle1" TargetType="{x:Type TabItem}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="{StaticResource TabItem.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TabItem.Static.Border}"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="6,2,6,2"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+                            <Border CornerRadius="10" x:Name="mainBorder" BorderThickness="0,0,0,0" BorderBrush="Black" Margin="0">
+                                <Border.Background>
+                                    <RadialGradientBrush RadiusX="0.6" RadiusY="0.5">
+                                        <GradientStop Color="#FF3E3131"/>
+                                        <GradientStop Color="White" Offset="1"/>
+                                    </RadialGradientBrush>
+                                </Border.Background>
+                                <Border CornerRadius="10" x:Name="innerBorder" BorderThickness="0,0,0,0" BorderBrush="Black" Margin="-1" Opacity="0">
+                                    <Border.Background>
+                                        <RadialGradientBrush RadiusX="1">
+                                            <GradientStop Color="#FF132576"/>
+                                            <GradientStop Color="White" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Border.Background>
+                                </Border>
+                            </Border>
+                            <ContentPresenter x:Name="contentPresenter" ContentSource="Header" Focusable="False" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Border}"/>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,0,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,0,1,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Border}"/>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,0,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,0,1,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Border}"/>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="0,1,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="0,1,1,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.MouseOver.Border}"/>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Opacity" TargetName="contentPresenter" Value="0.56"/>
+                                <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.Disabled.Border}"/>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,0,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,0,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Opacity" TargetName="contentPresenter" Value="0.56"/>
+                                <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.Disabled.Border}"/>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,0,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,0,1,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Opacity" TargetName="contentPresenter" Value="0.56"/>
+                                <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.Disabled.Border}"/>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="0,1,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="0,1,1,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Opacity" TargetName="contentPresenter" Value="0.56"/>
+                                <Setter Property="Background" TargetName="mainBorder" Value="{StaticResource TabItem.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="mainBorder" Value="{StaticResource TabItem.Disabled.Border}"/>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,0,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,0,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Panel.ZIndex" Value="1"/>
+                                <Setter Property="Margin" Value="-2,-2,0,-2"/>
+                                <Setter Property="Opacity" TargetName="innerBorder" Value="1"/>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,0,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,0,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,0,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,0,1,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Panel.ZIndex" Value="1"/>
+                                <Setter Property="Margin" Value="-2,0,-2,-2"/>
+                                <Setter Property="Opacity" TargetName="innerBorder" Value="1"/>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,0,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,0,1,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="0,1,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="0,1,1,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Panel.ZIndex" Value="1"/>
+                                <Setter Property="Margin" Value="0,-2,-2,-2"/>
+                                <Setter Property="Opacity" TargetName="innerBorder" Value="1"/>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="0,1,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="0,1,1,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,1"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Panel.ZIndex" Value="1"/>
+                                <Setter Property="Margin" Value="-2,-2,-2,0"/>
+                                <Setter Property="Opacity" TargetName="innerBorder" Value="1"/>
+                                <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,1"/>
+                                <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,1"/>
+                            </MultiDataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="Silver"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="Silver"/>
+        <Style x:Key="PlaceholderTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border CornerRadius="8" x:Name="border"
+                                
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                SnapsToDevicePixels="True">
+                            <Grid>
+                                <ScrollViewer x:Name="PART_ContentHost" />
+                                <TextBlock x:Name="textBlock"
+                                    Margin="2,2,0,0"
+                                    Foreground="#0f4440"
+                                    IsHitTestVisible="False"
+                                    Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Visibility="Collapsed" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="textBlock" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.56" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource TextBox.MouseOver.Border}" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource TextBox.Focus.Border}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PlaceholderPasswordBoxStyle" TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource {x:Type PasswordBox}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type PasswordBox}">
+                        <Border CornerRadius="8" x:Name="border"
+                                
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                SnapsToDevicePixels="True">
+                            <Grid>
+                                <ScrollViewer x:Name="PART_ContentHost" />
+                                <TextBlock x:Name="textBlock"
+                                    Margin="2,2,0,0"
+                                    Foreground="#c9c9c9"
+                                    IsHitTestVisible="False"
+                                    Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Visibility="Collapsed" Tag="Пароль" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="PasswordChar" Value="">
+                                <Setter TargetName="textBlock" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.56" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource TextBox.MouseOver.Border}" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource TextBox.Focus.Border}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border CornerRadius="8" x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="FocusVisual1">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" SnapsToDevicePixels="true" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="TextBox.Static.Background" Color="#FFFFFFFF"/>
+        <Style x:Key="ComboBoxEditableTextBox" TargetType="{x:Type TextBox}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <ScrollViewer x:Name="PART_ContentHost" Background="Transparent" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <LinearGradientBrush x:Key="ComboBox.Static.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFCACBBD" Offset="0.0"/>
+            <GradientStop Color="#FFCACBBD" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FFACACAC"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="#FF606060"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="#FFCACBBD"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Editable.Border" Color="#FF767E76"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Background" Color="Transparent"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Border" Color="Transparent"/>
+        <LinearGradientBrush x:Key="ComboBox.MouseOver.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFCACBBD" Offset="0.0"/>
+            <GradientStop Color="#FFCACBBD" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Glyph" Color="#FF000000"/>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Background" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Border" Color="#FF7EB4EA"/>
+        <LinearGradientBrush x:Key="ComboBox.MouseOver.Editable.Button.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFEBF4FC" Offset="0.0"/>
+            <GradientStop Color="#FFDCECFC" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Button.Border" Color="#FF7EB4EA"/>
+        <LinearGradientBrush x:Key="ComboBox.Pressed.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFDAECFC" Offset="0.0"/>
+            <GradientStop Color="#FFC4E0FC" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Border" Color="#FF569DE5"/>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Glyph" Color="#FF000000"/>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Background" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Border" Color="#FF569DE5"/>
+        <LinearGradientBrush x:Key="ComboBox.Pressed.Editable.Button.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFDAEBFC" Offset="0.0"/>
+            <GradientStop Color="#FFC4E0FC" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Button.Border" Color="#FF569DE5"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Background" Color="#FFF0F0F0"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Border" Color="#FFD9D9D9"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Glyph" Color="#FFBFBFBF"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Background" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Border" Color="#FFBFBFBF"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Background" Color="Transparent"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Border" Color="Transparent"/>
+        <Style x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="ClickMode" Value="Press"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="templateRoot" CornerRadius="8" Background="{StaticResource ComboBox.Static.Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{StaticResource ComboBox.Static.Border}" SnapsToDevicePixels="true">
+                            <Border x:Name="splitBorder" BorderThickness="1" BorderBrush="Transparent" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="true" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
+                                <Path x:Name="arrow" Data="F1 M 0,0 L 2.667,2.66665 L 5.3334,0 L 5.3334,-1.78168 L 2.6667,0.88501 L0,-1.78168 L0,0 Z" Fill="{StaticResource ComboBox.Static.Glyph}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
+                            </Border>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Static.Editable.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Static.Editable.Border}"/>
+                                <Setter Property="Background" TargetName="splitBorder" Value="{StaticResource ComboBox.Static.Editable.Button.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="splitBorder" Value="{StaticResource ComboBox.Static.Editable.Button.Border}"/>
+                            </MultiDataTrigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Fill" TargetName="arrow" Value="{StaticResource ComboBox.MouseOver.Glyph}"/>
+                            </Trigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.MouseOver.Border}"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.MouseOver.Editable.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.MouseOver.Editable.Border}"/>
+                                <Setter Property="Background" TargetName="splitBorder" Value="{StaticResource ComboBox.MouseOver.Editable.Button.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="splitBorder" Value="{StaticResource ComboBox.MouseOver.Editable.Button.Border}"/>
+                            </MultiDataTrigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Fill" TargetName="arrow" Value="{StaticResource ComboBox.Pressed.Glyph}"/>
+                            </Trigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Pressed.Border}"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Pressed.Editable.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Pressed.Editable.Border}"/>
+                                <Setter Property="Background" TargetName="splitBorder" Value="{StaticResource ComboBox.Pressed.Editable.Button.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="splitBorder" Value="{StaticResource ComboBox.Pressed.Editable.Button.Border}"/>
+                            </MultiDataTrigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Fill" TargetName="arrow" Value="{StaticResource ComboBox.Disabled.Glyph}"/>
+                            </Trigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Border}"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Editable.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Editable.Border}"/>
+                                <Setter Property="Background" TargetName="splitBorder" Value="{StaticResource ComboBox.Disabled.Editable.Button.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="splitBorder" Value="{StaticResource ComboBox.Disabled.Editable.Button.Border}"/>
+                            </MultiDataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="ComboBoxEditableTemplate" TargetType="{x:Type ComboBox}">
+            <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
+                </Grid.ColumnDefinitions>
+                <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
+                    <theme:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MinWidth="{Binding ActualWidth, ElementName=templateRoot}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                        <Border x:Name="dropDownBorder" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}">
+                            <ScrollViewer x:Name="DropDownScrollViewer">
+                                <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                                    <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                        <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                    </Canvas>
+                                    <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                </Grid>
+                            </ScrollViewer>
+                        </Border>
+                    </theme:SystemDropShadowChrome>
+                </Popup>
+                <ToggleButton x:Name="toggleButton" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Grid.ColumnSpan="2" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ComboBoxToggleButton}"/>
+                <Border x:Name="border" Background="{StaticResource TextBox.Static.Background}" Margin="{TemplateBinding BorderThickness}">
+                    <TextBox x:Name="PART_EditableTextBox" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" Margin="{TemplateBinding Padding}" Style="{StaticResource ComboBoxEditableTextBox}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                </Border>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocusWithin" Value="true">
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+                <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="true">
+                    <Setter Property="Margin" TargetName="shadow" Value="0,0,5,5"/>
+                    <Setter Property="Color" TargetName="shadow" Value="#71000000"/>
+                </Trigger>
+                <Trigger Property="HasItems" Value="false">
+                    <Setter Property="Height" TargetName="dropDownBorder" Value="95"/>
+                </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsGrouping" Value="true"/>
+                        <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                </MultiTrigger>
+                <Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
+                    <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
+                    <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ComboBoxTemplate" TargetType="{x:Type ComboBox}">
+            <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
+                </Grid.ColumnDefinitions>
+                <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" Placement="Bottom" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
+                    <theme:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MinWidth="{Binding ActualWidth, ElementName=templateRoot}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                        <Border x:Name="dropDownBorder" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" BorderThickness="1" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}">
+                            <ScrollViewer x:Name="DropDownScrollViewer">
+                                <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                                    <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                        <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                    </Canvas>
+                                    <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                </Grid>
+                            </ScrollViewer>
+                        </Border>
+                    </theme:SystemDropShadowChrome>
+                </Popup>
+                <ToggleButton x:Name="toggleButton" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Grid.ColumnSpan="2" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ComboBoxToggleButton}"/>
+                <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" Content="{TemplateBinding SelectionBoxItem}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" IsHitTestVisible="false" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="true">
+                    <Setter Property="Margin" TargetName="shadow" Value="0,0,5,5"/>
+                    <Setter Property="Color" TargetName="shadow" Value="#71000000"/>
+                </Trigger>
+                <Trigger Property="HasItems" Value="false">
+                    <Setter Property="Height" TargetName="dropDownBorder" Value="95"/>
+                </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsGrouping" Value="true"/>
+                        <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                </MultiTrigger>
+                <Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
+                    <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
+                    <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style x:Key="ComboBoxStyle1" TargetType="{x:Type ComboBox}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual1}"/>
+            <Setter Property="Background" Value="{StaticResource ComboBox.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ComboBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Padding" Value="6,3,5,3"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}"/>
+            <Style.Triggers>
+                <Trigger Property="IsEditable" Value="true">
+                    <Setter Property="IsTabStop" Value="false"/>
+                    <Setter Property="Padding" Value="2"/>
+                    <Setter Property="Template" Value="{StaticResource ComboBoxEditableTemplate}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid x:Name="Sign" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.Background>
+                <ImageBrush ImageSource="/1580675968_36-p-foni-s-avto-dlya-saitov-86.jpg"/>
+            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions >
+                <RowDefinition Height="2*" ></RowDefinition>
+                <RowDefinition Height="8*"></RowDefinition>
+                <RowDefinition Height="2*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Rectangle>
+                <Rectangle.Fill>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0" Opacity="0.2">
+                        <GradientStop Color="Black" Offset="0.229"/>
+                        <GradientStop Color="White" Offset="1"/>
+                        <GradientStop Color="#FFC7C7C7" Offset="0.832"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Text="Регистрация" HorizontalAlignment="Center" Height="30" FontSize="20" FontWeight="Bold"></TextBlock>
+                <TextBox x:Name="NameReg" Style="{DynamicResource PlaceholderTextBoxStyle}" FontSize="18" Tag="Имя" Height="30" Margin="50,30,50,0" Foreground="Black"></TextBox>
+                <TextBox x:Name="SurnameReg" Style="{DynamicResource PlaceholderTextBoxStyle}" FontSize="18" Tag="Фамилия" Height="30" Margin="50,30,50,0"></TextBox>
+                <TextBox x:Name="EmailReg" Style="{DynamicResource PlaceholderTextBoxStyle}" FontSize="18" Tag="email" Height="30" Margin="50,30,50,0"></TextBox>
+                <TextBox x:Name="NumberPhoneReg" Style="{DynamicResource PlaceholderTextBoxStyle}" FontSize="18" Tag="Номер телефона" Height="30" Margin="50,30,50,0"></TextBox>
+                <PasswordBox x:Name="PasswordReg" Style="{DynamicResource PlaceholderPasswordBoxStyle}" FontSize="18" Tag="Пароль" Height="30" Margin="50,30,50,0"></PasswordBox>
+                <StackPanel Height="40" Margin="60,70,60,0" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Style="{DynamicResource ButtonStyle1}" Width="120" Margin="0,0,30,0" Content="Зарегистрироваться" Click="Button_Click_4"></Button>
+                    <Button Style="{DynamicResource ButtonStyle1}" Width="120" Content="Вход" Click="Button_Click_3"></Button>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <Grid x:Name="Login" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.Background>
+                <ImageBrush ImageSource="/1580675968_36-p-foni-s-avto-dlya-saitov-86.jpg"/>
+            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" ></RowDefinition>
+                <RowDefinition Height="8*"></RowDefinition>
+                <RowDefinition Height="2*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Rectangle Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Grid.RowSpan="3" RenderTransformOrigin="0.501,0.509">
+                <Rectangle.Fill>
+                    <SolidColorBrush Color="Black" Opacity="0.5"/>
+                </Rectangle.Fill>
+            </Rectangle>
+            <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Text="Вход" HorizontalAlignment="Center" Height="30" FontSize="20" FontWeight="Bold"></TextBlock>
+                <TextBox x:Name="txtEmail" Tag="Еmail" Height="30" Margin="50,30,50,0" UndoLimit="10" Style="{DynamicResource PlaceholderTextBoxStyle}" FontSize="18" Foreground="Black" SelectionTextBrush="Black"/>
+                <PasswordBox x:Name="txtPassword" Style="{DynamicResource PlaceholderPasswordBoxStyle}" Tag="Пароль" Height="30" Margin="50,30,50,0" FontSize="18" Foreground="Black" SelectionTextBrush="Black" Cursor="IBeam"></PasswordBox>
+                <StackPanel Height="40" Margin="60,70,60,0" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Style="{DynamicResource ButtonStyle1}" Width="120" Margin="0,0,30,0" Content="Войти" Click="Button_Click_1"></Button>
+                    <Button Style="{DynamicResource ButtonStyle1}" Width="120" Content="Регистрация" Click="Button_Click_2"></Button>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <TabControl x:Name="tabControl" SelectionChanged="TabControl_SelectionChanged" Margin="-5,-29,0,0" Visibility="Visible" VerticalContentAlignment="Stretch">
+            <TabControl.Background>
+                <ImageBrush ImageSource="/1580675968_36-p-foni-s-avto-dlya-saitov-86.jpg"/>
+            </TabControl.Background>
+            <TabItem Style="{DynamicResource TabItemStyle1}" Header="Главная" Width="198" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold" Margin="11,75,-11,-77" BorderBrush="{x:Null}" Foreground="White">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="#FFF0F0F0"/>
+                        <GradientStop Color="#FF97CD6B" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+
+                <Grid Background="#FFE5E5E5">
+
+                    <TextBox x:Name="Model_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="-176,-284,10,286" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="Модель" Background="#FFCACBBD" Foreground="Black" ToolTip="Модель" />
+                    <TextBox x:Name="KPP_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="-176,-220,10,222" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="КПП" Background="#FFCACBBD" Foreground="Black" ToolTip="Коробка переключения передач" />
+                    <TextBox x:Name="Price_1_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="-176,-158,10,160" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="Цена от" Background="#FFCACBBD"  Foreground="Black" ToolTip="Цена от" />
+                    <TextBox x:Name="Power_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="8,-284,-174,286" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" Tag="Л.с." FontSize="18" Background="#FFCACBBD"  Foreground="Black" ToolTip="Лошадиные силы"/>
+                    <TextBox x:Name="Fuel_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="8,-220,-174,222" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="Топливо" Background="#FFCACBBD" Foreground="Black" ToolTip="Топливо" />
+                    <TextBox x:Name="Price_2_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="8,-158,-174,160" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="Цена до" Background="#FFCACBBD"  Foreground="Black" ToolTip="Цена до"/>
+                    <TextBox x:Name="Rashod_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="196,-284,-362,286" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="Расход" Background="#FFCACBBD"  Foreground="Black" ToolTip="Расход"/>
+                    <TextBox x:Name="Color_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="196,-220,-362,222" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="Цвет" Background="#FFCACBBD"  Foreground="Black" ToolTip="Цвет"/>
+                    <TextBox x:Name="Privod_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="386,-284,-552,286" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" Tag="Привод" FontSize="18" Background="#FFCACBBD"  Foreground="Black" ToolTip="Привод"/>
+                    <TextBox x:Name="Col_mest_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="386,-220,-552,222" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="Кол. мест" Background="#FFCACBBD"  Foreground="Black" ToolTip="Количество мест"/>
+                    <Button x:Name="Search" Style="{DynamicResource ButtonStyle1}" Content="Поиск" Margin="204,-158,-552,159" Height="35" Background="#FF51BF51" Foreground="White" Click="Search_Click"/>
+                    <TextBox x:Name="Marka_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="-372,-284,206,286" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" Tag="Марка" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Background="#FFCACBBD"  Foreground="Black" ToolTip="Марка"/>
+                    <TextBox x:Name="V_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="-372,-220,206,222" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="Объём двигателя" Background="#FFCACBBD" Foreground="Black" ToolTip="Объем двигателя" />
+                    <TextBox x:Name="Country_search" Style="{DynamicResource PlaceholderTextBoxStyle}" Margin="-372,-158,206,160" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="Страна" Background="#FFCACBBD"  Foreground="Black" ToolTip="Страна"/>
+
+                    <Border x:Name="Block_1" CornerRadius="15" BorderThickness="1,1,5,5" Margin="-370,-78,-556,-69" BorderBrush="Black">
+                        <Border.Background>
+                            <SolidColorBrush Color="White" Opacity="0.7"/>
+                        </Border.Background>
+                        <Canvas Margin="0,0,16,0">
+                            <Button x:Name="Bron_button_1" Style="{DynamicResource ButtonStyle1}" Content="Забронировать" Height="44" Canvas.Left="753" Canvas.Top="94" Width="146" Foreground="White" Background="#FF35AE3A" Click="Bron_button_1_Click"/>
+                            <TextBox x:Name="Block_1_label_1" Height="112" Canvas.Left="308" Canvas.Top="28" Width="426" FontSize="16" TextWrapping="Wrap" BorderBrush="{x:Null}" Background="{x:Null}" VerticalContentAlignment="Center" IsReadOnly="True" Foreground="Black"/>
+                            <TextBox x:Name="Block_1_label_2" Height="30" Canvas.Left="308" Canvas.Top="18" Width="426" FontSize="18" TextWrapping="Wrap" BorderBrush="{x:Null}" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" IsReadOnly="True" Foreground="#FF0B0B0B"/>
+                            <!--><TextBox x:Name="Block_1_label_2" Text="КПП/ Топливо/ Цвет/ Кол. мест/ Страна/ " Height="39" Canvas.Left="308" Canvas.Top="115" Width="426" FontSize="18"/></-->
+                            <Label x:Name="label_price_1" Content="1600 р./день" Canvas.Left="756" Canvas.Top="34" Height="44" Width="140" Foreground="#FFD4D5E0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                <Label.Background>
+                                    <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="1.1">
+                                        <GradientStop Color="#FF1C5176" Offset="0.365"/>
+                                        <GradientStop Color="#FF5684A4" Offset="1"/>
+                                    </RadialGradientBrush>
+                                </Label.Background>
+                            </Label>
+                            <Image x:Name="Image_block_1" Height="136" Width="253" Canvas.Left="25" Canvas.Top="22"/>
+                        </Canvas>
+                    </Border>
+                    <Border x:Name="Block_2" CornerRadius="15" BorderThickness="1,1,5,5" Margin="-370,125,-556,-272" BorderBrush="Black">
+                        <Border.Background>
+                            <SolidColorBrush Color="White" Opacity="0.705"/>
+                        </Border.Background>
+                        <Canvas Margin="0,3,11,-3">
+                            <Button x:Name="Bron_button_2" Style="{DynamicResource ButtonStyle1}" Content="Забронировать" Height="44" Canvas.Left="753" Canvas.Top="94" Width="146" Foreground="White" Background="#FF35AE3A" Click="Bron_button_2_Click"/>
+                            <TextBox x:Name="Block_2_label_1" Height="110" Canvas.Left="308" Canvas.Top="28" Width="426" FontSize="16" TextWrapping="Wrap" BorderBrush="{x:Null}" Background="{x:Null}" VerticalContentAlignment="Center" IsReadOnly="True" Foreground="Black"/>
+                            <TextBox x:Name="Block_2_label_2" Height="30" Canvas.Left="308" Canvas.Top="18" Width="426" FontSize="18" TextWrapping="Wrap" BorderBrush="{x:Null}" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" IsReadOnly="True" Cursor="IBeam" Foreground="Black"/>
+                            <!--><TextBox x:Name="Block_2_label_2" Text="КПП/ Топливо/ Цвет/ Кол. мест/ Страна/ " Height="39" Canvas.Left="308" Canvas.Top="80" Width="426" FontSize="18"/></-->
+                            <Label x:Name="label_price_2" Content="1600 р./день" Canvas.Left="756" Canvas.Top="34" Height="44" Width="140" Foreground="#FFD4D5E0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                <Label.Background>
+                                    <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="1.1">
+                                        <GradientStop Color="#FF1C5176" Offset="0.365"/>
+                                        <GradientStop Color="#FF5684A4" Offset="1"/>
+                                    </RadialGradientBrush>
+                                </Label.Background>
+                            </Label>
+                            <Image x:Name="Image_block_2" Height="136" Width="253" Canvas.Left="25" Canvas.Top="22"/>
+                        </Canvas>
+                    </Border>
+                    <Button x:Name="Next" Content="&gt;" Margin="573,-78,-632,-271" FontSize="36" BorderBrush="{x:Null}" Click="Next_Click" Style="{DynamicResource ButtonStyle1}">
+                        <Button.Foreground>
+                            <SolidColorBrush Color="White" Opacity="0.52"/>
+                        </Button.Foreground>
+                        <Button.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.565"/>
+                        </Button.Background>
+                    </Button>
+                    <Button x:Name="Prev" Content="&lt;" Margin="-447,-78,388,-271" FontSize="36" BorderBrush="{x:Null}" Foreground="White" Click="Prev_Click" Style="{DynamicResource ButtonStyle1}">
+                        <Button.Background>
+                            <SolidColorBrush Color="Black" Opacity="0.57"/>
+                        </Button.Background>
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem Style="{DynamicResource TabItemStyle1}" Header="Профиль" Width="198" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold" Margin="-187,110,187,-112" Foreground="White">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="#FFF0F0F0"/>
+                        <GradientStop Color="#FF97CD6B" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid Background="#FFE5E5E5">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="Profil" CornerRadius="15" BorderThickness="1,1,5,5" Margin="-370,-330,-256,-112" BorderBrush="Black">
+                        <Border.Background>
+                            <SolidColorBrush Color="White" Opacity="0.705"/>
+                        </Border.Background>
+                        <StackPanel>
+                            <TextBlock x:Name="ProfilStatus" VerticalAlignment="Top" Foreground="Black" FontSize="20" Margin="0,30,0,0" HorizontalAlignment="Center" Text="Ваш статус:"></TextBlock>
+                            <TextBox x:Name="ProfilName" IsReadOnly="True" Grid.Column="0" Margin="90,30,90,0" Height="40" Style="{DynamicResource PlaceholderTextBoxStyle}" Tag="Имя" Foreground="Black"></TextBox>
+                            <TextBox x:Name="ProfilSurname" IsReadOnly="True" Grid.Column="0" Margin="90,30,90,0" Height="40" Style="{DynamicResource PlaceholderTextBoxStyle}" Tag="Фамилия" Foreground="Black"></TextBox>
+                            <TextBox x:Name="ProfilEmail" IsReadOnly="True" Grid.Column="0" Margin="90,30,90,0" Height="40" Style="{DynamicResource PlaceholderTextBoxStyle}" Tag="Email" Foreground="Black"></TextBox>
+                            <TextBox x:Name="ProfilTelephoneNumber" IsReadOnly="True" Grid.Column="0" Margin="90,30,90,0" Height="40" Style="{DynamicResource PlaceholderTextBoxStyle}" Tag="Номер телефона" Foreground="Black"></TextBox>
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="btnCloseProfil" Style="{DynamicResource ButtonStyle1}" Width="200" Margin="90,30,0,0" Content="Выход" Click="btnCloseProfil_Click"></Button>
+                                <Button x:Name="btnReductProfile" Style="{DynamicResource ButtonStyle1}" Width="200" Margin="30,30,0,0" Content="Изменить" Click="btnReductProfile_Click"></Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Style="{DynamicResource TabItemStyle1}" Header="Наши офисы" Width="198" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold" Margin="-385,144,385,-149" Foreground="White">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="#FFF0F0F0"/>
+                        <GradientStop Color="#FF97CD6B" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid Width="1100" Height="700">
+                    <WebBrowser x:Name="wbMaps" Source="https://www.google.com/maps/place/55%C2%B048'47.7%22N+49%C2%B010'54.0%22E/@55.813245,49.1794903,17z/data=!3m1!4b1!4m6!3m5!1s0x0:0x5f14a7ac29345dcc!7e2!8m2!3d55.8132453!4d49.1816793"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="AddCar" Style="{DynamicResource TabItemStyle1}" Header="Добавить автомобиль" Width="198" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold" Margin="-584,219,584,-223" Foreground="White">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="#FFF0F0F0"/>
+                        <GradientStop Color="#FF97CD6B" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid Background="#FFE5E5E5">
+                    <Canvas>
+                        <ComboBox Style="{DynamicResource ComboBoxStyle1}" x:Name="Model_add" Background="#FFCACBBD" Margin="-176,-284,10,286" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="Модель" Text="Модель" BorderThickness="0,1,1,1" Foreground="Black" BorderBrush="#FFEA7600" ToolTip="Модель"/>
+                        <ComboBox x:Name="KPP_add" Style="{DynamicResource ComboBoxStyle1}" Background="#FFCACBBD" Margin="-176,-220,10,222" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="КПП" Foreground="Black" ToolTip="Коробка переключения передач" />
+                        <TextBox x:Name="Price_add" Style="{DynamicResource PlaceholderTextBoxStyle}" Background="#FFCACBBD" Margin="-176,-158,10,160" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Foreground="Black" Tag="Цена" ToolTip="Цена за час" />
+                        <TextBox x:Name="Power_add" Style="{DynamicResource PlaceholderTextBoxStyle}" Background="#FFCACBBD" Margin="8,-284,-174,286" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" Tag="Л.с." FontSize="18" Foreground="Black" ToolTip="Лошадиные силы" />
+                        <ComboBox x:Name="Fuel_add" Style="{DynamicResource ComboBoxStyle1}" Background="#FFCACBBD" Margin="8,-220,-174,222" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="Топливо" Foreground="Black" ToolTip="Топливо" />
+                        <TextBox x:Name="Rashod_add" Style="{DynamicResource PlaceholderTextBoxStyle}" Background="#FFCACBBD" Margin="196,-284,-362,286" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Foreground="Black" Tag="Расход" ToolTip="Расход" />
+                        <TextBox x:Name="Color_add" Style="{DynamicResource PlaceholderTextBoxStyle}" Background="#FFCACBBD" Margin="196,-220,-362,222" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Foreground="Black" Tag="Цвет" InputScope="Password" Cursor="IBeam" ToolTip="Цвет" />
+                        <ComboBox x:Name="Privod_add" Style="{DynamicResource ComboBoxStyle1}" Background="#FFCACBBD" Margin="386,-284,-552,286" BorderBrush="{x:Null}" Height="35" Tag="Привод" FontSize="18"  Foreground="Black" ToolTip="Привод"/>
+                        <TextBox x:Name="Col_mest_add" Style="{DynamicResource PlaceholderTextBoxStyle}" Background="#FFCACBBD" Margin="386,-220,-552,222" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left"  Foreground="Black" VerticalContentAlignment="Center" Tag="Кол. мест" ToolTip="Количество мест" />
+                        <Button x:Name="Select_image" Style="{DynamicResource ButtonStyle1}" Content="Выбрать картинку" Margin="-374,262,26,-260" Height="35" Background="#FF557655" Foreground="Black" Click="Select_image_Click"/>
+                        <ComboBox x:Name="Marka_add" Style="{DynamicResource ComboBoxStyle1}" materialDesign:HintAssist.Hint="Марка" Margin="-372,-284,206,286" BorderBrush="{x:Null}" Height="35" Tag="Марка" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"  Foreground="Black" ToolTip="Марка" SelectionChanged="Marka_add_SelectionChanged"/>
+                        <TextBox x:Name="V_add" Style="{DynamicResource PlaceholderTextBoxStyle}" Background="#FFCACBBD" Margin="-372,-220,206,222" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Foreground="Black" Tag="Объём двигателя" ToolTip="Объем двигателя" />
+                        <ComboBox x:Name="Country_add" Style="{DynamicResource ComboBoxStyle1}" Background="#FFCACBBD" Margin="-372,-158,206,160" BorderBrush="{x:Null}" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Tag="Страна"  Foreground="Black" ToolTip="Страна"/>
+                        <Button x:Name="Clear_add" Style="{DynamicResource ButtonStyle1}" Content="Очистить" Margin="10,-156,-358,158" Height="35" Background="#FF767E76" Foreground="White" Click="Clear_add_Click"/>
+                        <TextBox x:Name="NewModel_add" Style="{DynamicResource PlaceholderTextBoxStyle}" Background="#FFCACBBD" Margin="382,-156,-206,158" CaretBrush="#FF2C1C1C" BorderBrush="{x:Null}" Width="170" Height="35" FontSize="18" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Foreground="Black" Tag="Новая модель" ToolTip="Новая модель" Visibility="Visible" />
+                        <Button x:Name="BtnAddInBd" Style="{StaticResource MaterialDesignFloatingActionLightButton}"  Margin="560,-156,-206,158" Click="BtnAddInBD_Click"  materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding IsSaving}"
+  materialDesign:ButtonProgressAssist.Value="{Binding SaveProgress}">
+                            <!-- simple example of toggling/animating pack icon with a data trigger-->
+                            <materialDesign:PackIcon
+    Height="24"
+    Width="24">
+                                <materialDesign:PackIcon.Style>
+                                    <Style
+        TargetType="materialDesign:PackIcon">
+                                        <Setter
+          Property="Kind"
+          Value="CloudSync" />
+                                        <Style.Triggers>
+                                            <DataTrigger
+            Binding="{Binding IsSaveComplete}"
+            Value="True">
+                                                <Setter
+              Property="Kind"
+              Value="Check" />
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation
+                    Storyboard.TargetProperty="Opacity"
+                    From="0"
+                    To="1"
+                    Duration="0:0:0.8" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </materialDesign:PackIcon.Style>
+                            </materialDesign:PackIcon>
+                        </Button>
+                        <Button Style="{DynamicResource ButtonStyle1}" Content="Добавить" Margin="200,262,-548,-260" Height="35" Background="#FF208720" Foreground="White" Click="Button_Click"/>
+                        <Image x:Name="ADD_image" Width="407" Height="257" Canvas.Left="-368" Canvas.Top="-60" />
+                    </Canvas>
+                </Grid>
+            </TabItem>
+
+
+            <TabItem x:Name="ShowClients" Style="{DynamicResource TabItemStyle1}" Header="Все пользователи" Width="198" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold" Margin="-782,259,782,-263" Foreground="White">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="#FFF0F0F0"/>
+                        <GradientStop Color="#FF97CD6B" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid    Width="1000" Height="500">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="8*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid
+                      Background="Transparent"
+                      x:Name="data"
+                      Grid.Column="1"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch"
+                      ItemsSource="{Binding clients}" 
+                      CanUserAddRows="False"
+                      SelectionUnit="Cell"
+                      SelectionMode="Extended"
+                      CanUserResizeColumns="False"
+                      CanUserResizeRows="False" BeginningEdit="data_BeginningEdit"/>
+
+                    <Button Style="{DynamicResource ButtonStyle1}" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center" Width="140" Height="30" Margin="0,70,0,0" x:Name="ReductClientBtn" Content="Редактировать" Click="ReductClientBtn_Click"></Button>
+                    <Button Style="{DynamicResource ButtonStyle1}" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Center" Width="140" Height="30" Margin="0,130,0,0" x:Name="DeleteClientBtn" Content="Удалить" Click="DeleteClientBtn_Click"></Button>
+                </Grid>
+            </TabItem>
+
+            <TabItem x:Name="ShowContracts" Style="{DynamicResource TabItemStyle1}" Header="Все контракты" Width="198" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold" Margin="-980,183,980,-187" Foreground="White">
+                <TabItem.Background>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="#FFF0F0F0"/>
+                        <GradientStop Color="#FF97CD6B" Offset="1"/>
+                    </LinearGradientBrush>
+                </TabItem.Background>
+                <Grid Width="1000" Height="500">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="8*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView x:Name="contracts"
+                    Grid.Column="1"
+                    FontSize="18"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                        ItemsSource="{Binding contract}" SelectionMode="Extended" Style="{DynamicResource MaterialDesignListView}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding IdCar}"
+                                    Header="IdCar"
+                                    Width="125"
+                                    />
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding IdClient}"
+                                    Header="IdClient" 
+                                    Width="140"/>
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding Time}"
+                                    Header="Time" 
+                                    Width="150"/>
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding TotalPrice}"
+                                    Header="Total Price" 
+                                    Width="170"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
